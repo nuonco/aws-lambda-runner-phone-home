@@ -1,0 +1,3 @@
+# Nuon Runner phone home
+
+This repository contains the code that is triggered as part of the [Nuon Runner's](https://docs.nuon.co/concepts/runners) installation process, when configured via a cloudformation quick-create link on AWS. The code is called as a lambda during creation, deletion, or updating of a stack with the ARNs of roles that were created. This information is then used by the runner to dynamically assume these roles as part of its job execution.
