@@ -1,7 +1,10 @@
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
-COPY --from=ghcr.io/astral-sh/uv:0.5.29 /uv /uvx /bin/
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY phonehome.py .
-CMD ["python", "phonehome.py"]
+FROM golang:1.23 as build
+WORKDIR /helloworld
+
+COPY go.mod go.sum ./
+COPY main.go .
+
+RUN go build -tags lambda.norpc -o main main.go
+FROM public.ecr.aws/lambda/provided:al2023
+COPY --from=build /helloworld/main ./main
+ENTRYPOINT [ "./main" ]
